@@ -56,3 +56,19 @@ def get_all_installed_win10_store():
     except:
         pass
     return results
+
+def get_installed_product_software():
+    results = {}
+
+    try:
+        for info in c.Win32_Product():
+            app_name = str(info.Name).encode('utf8','ignore').decode()
+            vendor = str(info.Vendor).encode('utf8', 'ignore').decode()
+
+            if app_name not in results:
+                results[app_name] = []
+            results[app_name] = [vendor, info.Version, info.InstallDate]
+
+    except:
+        pass
+    return results
