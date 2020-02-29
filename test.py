@@ -16,3 +16,7 @@ for interface in c.Win32_NetworkAdapterConfiguration (IPEnabled=1):
     print (interface.Description, interface.MACAddress)
     for ip_address in interface.IPAddress:
         print (ip_address)
+
+# Display what's running on startup
+for s in c.Win32_StartupCommand():
+    print(f"[{s.Location}] {s.Caption} <{s.Command}>")
