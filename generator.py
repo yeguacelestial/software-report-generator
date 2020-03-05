@@ -1,6 +1,10 @@
 import wmi
 import winreg
 
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import PageBreak
+
 class ReportGenerator():
 
     def __init__(self):
@@ -31,8 +35,12 @@ class ReportGenerator():
         except:
             pass
 
-        for k, v in resultados.items():
-            print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+        resultados = resultados.items()
+
+        #for k, v in resultados:
+        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+
+        return resultados
 
     def programas_productos(self):
         resultados = {}
@@ -53,8 +61,12 @@ class ReportGenerator():
         except:
             pass
 
-        for k, v in resultados.items():
-            print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+        resultados = resultados.items()
+
+        #for k, v in resultados:
+        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+
+        return resultados
 
     def programas_win10(self):
         resultados = {}
@@ -71,11 +83,50 @@ class ReportGenerator():
         except:
             pass
 
-        for k, v in resultados.items():
-            print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+        resultados = resultados.items()
+        #for k, v in resultados:
+        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
+
+        return resultados
+
+    def reporte(self, direccion):
+
+        try:
+            pdf = canvas.Canvas(f'{direccion}.pdf', pagesize=letter)
+
+            def escribir(diccionario):
+                i = 0
+                pdf.setFont('Helvetica', 8)
+
+                for k, v in diccionario:
+                    if i < 297:
+                        pdf.drawString(30,-40-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
+                        i += -15
+                        
+                    elif i > 297:
+                        i = 0
+                        pdf.showPage()
+                pdf.showPage()
+
+
+            apps_store = self.programas_win10_store()
+            apps_productos = self.programas_productos()
+            apps_win10 = self.programas_win10()
+
+            escribir(apps_store)
+            escribir(apps_productos)
+            escribir(apps_win10)
+
+            pdf.save()
+
+        except Exception as e:
+            print(f"[-] Error: {e}")
+            exit
+
 
 generador = ReportGenerator()
 
-generador.programas_win10_store()
-generador.programas_productos()
-generador.programas_win10()
+#generador.programas_win10_store()
+#generador.programas_productos()
+#generador.programas_win10()
+generador.reporte('D:\\prueba')
