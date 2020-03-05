@@ -52,13 +52,13 @@ def get_all_installed_win10_store():
             if app_name not in results:
                 results[app_name] = []
 
-            results[app_name] = [vender, info.Version, 'None']
+            results[app_name] = [vender, info.Version, 'Desconocida']
     except:
         pass
 
     for k, v in results.items():
         print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
-        
+
     #return results
 
 def get_installed_product_software():
@@ -91,7 +91,7 @@ def get_all_installed_win10_software():
 
             if app_name not in results:
                 results[app_name] = []
-            results[app_name] = [vendor, info.Version, 'None']
+            results[app_name] = [vendor, info.Version, 'Desconocida']
 
     except:
         pass
