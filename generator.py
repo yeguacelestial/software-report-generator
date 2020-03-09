@@ -52,11 +52,7 @@ class ReportGenerator():
 
                 if app_name not in resultados:
                     resultados[app_name] = []
-                resultados[
-
-
-
-                app_name] = [vendor, info.Version, info.InstallDate]
+                resultados[app_name] = [vendor, info.Version, info.InstallDate]
 
         except:
             pass
@@ -84,30 +80,26 @@ class ReportGenerator():
             pass
 
         resultados = resultados.items()
-        #for k, v in resultados:
-        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
 
         return resultados
 
     def reporte(self, direccion):
 
         try:
-            pdf = canvas.Canvas(f'{direccion}.pdf', pagesize=letter)
+            pdf = canvas.Canvas(f'{direccion}.pdf')
 
             def escribir(diccionario):
                 i = 0
-                pdf.setFont('Helvetica', 8)
 
                 for k, v in diccionario:
-                    if i < 297:
-                        pdf.drawString(30,-40-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
-                        i += -15
-                        
-                    elif i > 297:
-                        i = 0
-                        pdf.showPage()
-                pdf.showPage()
+                        pdf.setFont('Helvetica', 8)
+                        pdf.drawString(50, 800-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
+                        i += 20
 
+                        if 800-i < 50:
+                            pdf.showPage()
+                            i = 0
+                pdf.showPage()
 
             apps_store = self.programas_win10_store()
             apps_productos = self.programas_productos()
