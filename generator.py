@@ -82,11 +82,12 @@ class ReportGenerator():
     def reporte(self, direccion, nombre):
 
         try:
-            print("[+] Generando reporte...")
             nombre = f'\\{nombre}'
             direccion_final = direccion + nombre + ".pdf"
             pdf = canvas.Canvas(direccion_final)
 
+            print("[+] Generando reporte...")
+            
             def escribir(diccionario):
                 i = 0
 
