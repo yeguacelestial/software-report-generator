@@ -79,12 +79,13 @@ class ReportGenerator():
 
         return resultados
 
-    def reporte(self, direccion):
+    def reporte(self, direccion, nombre):
 
         try:
             print("[+] Generando reporte...")
-
-            pdf = canvas.Canvas(f'{direccion}.pdf')
+            nombre = f'\\{nombre}'
+            direccion_final = direccion + nombre + ".pdf"
+            pdf = canvas.Canvas(direccion_final)
 
             def escribir(diccionario):
                 i = 0
@@ -110,7 +111,7 @@ class ReportGenerator():
 
             pdf.save()
 
-            print(f"[+] Reporte de programas instalados generado.")
+            print(f"[+] Reporte generado en {direccion_final}")
 
         except Exception as e:
             print(f"[-] Error: {e}")
