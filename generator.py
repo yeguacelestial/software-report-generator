@@ -4,6 +4,8 @@ import winreg
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.platypus import PageBreak
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.tables import Table
 
 class ReportGenerator():
 
@@ -37,9 +39,6 @@ class ReportGenerator():
 
         resultados = resultados.items()
 
-        #for k, v in resultados:
-        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
-
         return resultados
 
     def programas_productos(self):
@@ -58,9 +57,6 @@ class ReportGenerator():
             pass
 
         resultados = resultados.items()
-
-        #for k, v in resultados:
-        #    print(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}')
 
         return resultados
 
@@ -86,20 +82,23 @@ class ReportGenerator():
     def reporte(self, direccion):
 
         try:
+            print("[+] Generando reporte...")
+
             pdf = canvas.Canvas(f'{direccion}.pdf')
 
             def escribir(diccionario):
                 i = 0
 
                 for k, v in diccionario:
-                        pdf.setFont('Helvetica', 8)
-                        pdf.drawString(50, 800-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
-                        i += 20
+                    pdf.setFont('Helvetica', 8)
+                    pdf.drawString(50, 800-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
+                    i += 20
 
-                        if 800-i < 50:
-                            pdf.showPage()
-                            i = 0
+                    if 800-i < 50:
+                        pdf.showPage()
+                        i = 0
                 pdf.showPage()
+
 
             apps_store = self.programas_win10_store()
             apps_productos = self.programas_productos()
@@ -111,14 +110,16 @@ class ReportGenerator():
 
             pdf.save()
 
+            print(f"[+] Reporte de programas instalados generado.")
+
         except Exception as e:
             print(f"[-] Error: {e}")
             exit
 
 
-generador = ReportGenerator()
+#generador = ReportGenerator()
+#generador.reporte('D:\\prueba')
 
-#generador.programas_win10_store()
-#generador.programas_productos()
-#generador.programas_win10()
-generador.reporte('D:\\prueba')
+# TODO:
+# - Espacio para la firma
+# - Inputs del usuario (direccion, nombre del archivo)
