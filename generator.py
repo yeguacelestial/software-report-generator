@@ -87,7 +87,7 @@ class ReportGenerator():
             pdf = canvas.Canvas(direccion_final)
 
             print("[+] Generando reporte...")
-            
+
             def escribir(diccionario):
                 i = 0
 
@@ -114,13 +114,12 @@ class ReportGenerator():
 
             print(f"[+] Reporte generado en {direccion_final}")
 
-        except Exception as e:
-            print(f"[-] Error: {e}")
+        except IOError as e:
+            print("[-] El directorio no existe. TIP: Escribe el directorio entre comillas.")
+
+        except:
+            print(f"[*] Usa el comando -h o --help para consultar los comandos de uso del programa.")
             exit
-
-
-#generador = ReportGenerator()
-#generador.reporte('D:\\prueba')
 
 # TODO:
 # - Espacio para la firma
