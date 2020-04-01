@@ -14,13 +14,13 @@ def main():
     generador.reporte(direccion, nombre)
 
 def input_options():
-    parser = OptionParser(usage="Uso: gestor.py [opciones]")
+    parser = OptionParser(usage="\n\nUso: gestor.py -d <direccion-deseada> -n <nombre-del-reporte>")
     parser.add_option("-d", "--direccion",
                       dest="direccion",
                       help="Direccion del reporte a generar")
     parser.add_option("-n", "--nombre",
                       dest="nombre",
-                      help="Nombre del archivo.")
+                      help="Nombre del archivo. Default: reporte.pdf")
     (options, args) = parser.parse_args()
 
     return options, args
