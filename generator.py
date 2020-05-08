@@ -79,7 +79,7 @@ class ReportGenerator():
 
         return resultados
 
-    def reporte(self, direccion, nombre):
+    def reporte(self, direccion, nombre="reporte"):
 
         try:
             if direccion[-1] != '\\':
@@ -96,13 +96,14 @@ class ReportGenerator():
             print(f"[+] Generando reporte como {nombre}.pdf...")
 
             table_data = [["APP", "FABRICANTE", "VERSION", "FECHA DE INSTALACION"]]
+
             def escribir(diccionario):
                 i = 0
 
                 for k, v in diccionario:
                     table_data.append([k,v[0],v[1],v[2]])
                     pdf.setFont('Helvetica', 8)
-                    pdf.drawString(50, 800-i, str(f'Aplicación: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalación: {v[2]}'))
+                    pdf.drawString(50, 800-i, str(f'Aplicacion: {k} - Fabricante: {v[0]} - Version: {v[1]} - Fecha de instalacion: {v[2]}'))
                     i += 20
 
                     if 800-i < 50:
@@ -119,51 +120,89 @@ class ReportGenerator():
             escribir(apps_productos)
             escribir(apps_win10)
 
+            # PC Details
+            # Serial Number of Motherboard and OS
+            import os, sys
+            def numero_serial():
+                os_type = sys.platform.lower()
+
+                if "win" in os_type:
+                    command = "wmic bios get serialnumber"
+
+                elif "linux" in os_type:
+                    command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
+
+                return os.popen(command).read().replace("\n","").replace("	","").replace(" ","")
+            serial = numero_serial()
+            serial = f"NUMERO SERIAL DEL PC: {serial}"
+
+            import platform
+            sistema_operativo = platform.platform()
+            sistema_operativo = f"SISTEMA OPERATIVO: {sistema_operativo}"
+
+            # Create Pararaph objects
+            from reportlab.platypus import Paragraph
+            from reportlab.lib.styles import getSampleStyleSheet
+            styles = getSampleStyleSheet()
+            styleN = styles['Normal']
+
+            P_serial = Paragraph(serial, styleN)
+            P_os = Paragraph(sistema_operativo, styleN)
+            firma = Paragraph("Firma:____________________________________________\n", styleN)
+
+            elems = []
+            elems.append(firma)
+            elems.append(P_serial)
+            elems.append(P_os)
+
         # START TABLE
             from reportlab.platypus import SimpleDocTemplate
-            from reportlab.lib.pagesizes import letter
+            from reportlab.lib.pagesizes import letter, A4, landscape
 
             pdf_table = SimpleDocTemplate(
-                "table.pdf",
-                pagesize = letter
+                f"{nombre}.pdf",
+                pagesize = A4
             )
+            pdf_table.pagesize = landscape(A4)
 
             from reportlab.platypus import Table
 
             from reportlab.lib.units import inch
-            colwidths = [2*inch] * len(table_data)
-            #rowheights = [.2*inch] * len(data)
+            colwidths = [2.8*inch] * len(table_data)
+            rowheights = [.5*inch] * len(table_data)
 
-            table = Table(table_data, colwidths)
+            table = Table(table_data, colwidths, rowheights)
 
             # Add style
-            from reportlab.platypus import TableStyle
+            from reportlab.platypus import TableStyle, Paragraph
             from reportlab.lib import colors
             style = TableStyle([
                     ('BACKGROUND', (0,0), (3,0), colors.green),
                     ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
 
                     ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                    ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
 
                     ('FONTAME', (0,0), (-1,0), 'Courier-Bold'),
-                    ('FONTSIZE', (0,0), (-1,-1), 8),
-                    ('FONTSIZE', (0,1), (0,-1), 5),
+                    ('FONTSIZE', (0,0), (-1,-1), 10),
+                    ('FONTSIZE', (0,1), (0,-1), 8),
 
                     ('BOTTOMPADDING', (0,0), (-1,0), 12),
 
                     ('BACKGROUND', (0,1), (-1,-1), colors.beige),
+
+                    ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                    ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
             ])
             table.setStyle(style)
 
-            elems = []
-            elems.append(table)
-
-            pdf_table.build(elems)
-
             print("[+] Tabla generada.")
         # END TABLE
-            pdf.save()
 
+            elems.append(table)
+            pdf_table.build(elems)
+
+            pdf.save()
             print(f"[+] Reporte {nombre}.pdf generado en {direccion_final}")
 
         except IOError as e:
@@ -175,8 +214,3 @@ class ReportGenerator():
             print(e)
             print(f"[*] Usa el comando -h o --help para consultar los comandos de uso del programa.")
             exit
-
-# TODO:
-# - Tabular todos los datos
-#   * Corregir texto de la columna APP
-# - Espacio para la firma
