@@ -131,4 +131,4 @@ dmypy.json
 # Other things
 *.pdf
 table_test.py
-test.py
+questionOverflowText.py
