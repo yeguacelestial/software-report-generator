@@ -3,3 +3,4 @@ __pycache__/
 questionOverflowText.py
 table_test.py
 testing.py
+.env
