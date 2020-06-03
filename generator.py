@@ -82,14 +82,14 @@ class ReportGenerator():
     def reporte(self, direccion, nombre="reporte"):
 
         try:
-            if direccion[-1] != '\\':
-                direccion = direccion + "\\"
+            # if direccion[-1] != '\\':
+            #     direccion = direccion + "\\"
 
             if nombre == None:
                 nombre = "reporte"
 
             else:
-                nombre = f'\\{nombre}'
+                nombre = f'{nombre}'
 
             direccion_final = direccion + nombre + ".pdf"
             pdf = canvas.Canvas(direccion_final)
@@ -206,11 +206,13 @@ class ReportGenerator():
             print(f"[+] Reporte {nombre}.pdf generado en {direccion_final}")
 
         except IOError as e:
+            raise
             print(e)
             print("[-] El directorio no existe, o no hay suficientes permisos para generar el reporte.")
             print("[*] TIP: Si el directorio existe, escribelo entre comillas.")
 
         except Exception as e:
+            raise
             print(e)
             print(f"[*] Usa el comando -h o --help para consultar los comandos de uso del programa.")
             exit
