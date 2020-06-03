@@ -1,5 +1,6 @@
 from generator import ReportGenerator
 from optparse import OptionParser
+import pkg_resources.py2_warn
 
 def main():
     get_input = input_options()
@@ -27,7 +28,7 @@ def main():
 
 
 def input_options():
-    parser = OptionParser(usage="\n\nUso: gestor.py -d <direccion-deseada> -n <nombre-del-reporte>")
+    parser = OptionParser(usage="\n\nUso: gestor.py [opciones]")
     parser.add_option("-n", "--nombre",
                       dest="nombre",
                       help="Nombre del archivo. Default: reporte.pdf")
