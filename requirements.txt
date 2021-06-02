@@ -7,6 +7,6 @@ python-dotenv==0.13.0
 pywin32==227
 reportlab==3.5.42
 requests==2.23.0
-urllib3==1.25.9
+urllib3==1.26.5
 wincertstore==0.2
 WMI==1.5.1
